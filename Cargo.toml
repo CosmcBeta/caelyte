@@ -1,3 +1,3 @@
 [workspace]
 resolver = "3"
-members = ["caelyte", "caelyte-raster"]
+members = ["caelyte", "caelyte-core", "caelyte-platform", "caelyte-raster", "caelyte-raster-gpu"]
