@@ -1,2 +1,2 @@
-# Caelye
+# Caelyte
 graphics library build from scratch
