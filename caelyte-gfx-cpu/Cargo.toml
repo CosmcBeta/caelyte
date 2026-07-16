@@ -4,3 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+softbuffer = "0.4.8"
+caelyte-core = { path = "../caelyte-core"}
+caelyte-platform = { path = "../caelyte-platform"}
+thiserror = "2.0.18"

@@ -1,5 +1,5 @@
-use std::sync::Arc;
 use caelyte_core::graphics::GraphicsBackend;
+use std::sync::Arc;
 use winit::{
     application::ApplicationHandler,
     event::WindowEvent,
@@ -7,12 +7,12 @@ use winit::{
     window::{Window, WindowId},
 };
 
-pub struct Engine<B: GraphicsBackend> {
+pub struct Engine<B: GraphicsBackend<Arc<Window>>> {
     window: Option<Arc<Window>>,
     pub renderer: Option<B>,
 }
 
-impl<B: GraphicsBackend> Engine<B> {
+impl<B: GraphicsBackend<Arc<Window>>> Engine<B> {
     pub fn new() -> Self {
         Self {
             window: None,
@@ -21,18 +21,21 @@ impl<B: GraphicsBackend> Engine<B> {
     }
 }
 
-impl<B: GraphicsBackend> ApplicationHandler for Engine<B> {
+impl<B: GraphicsBackend<Arc<Window>>> ApplicationHandler for Engine<B> {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let window = Arc::new(
-            event_loop
-                .create_window(Window::default_attributes())
-                .unwrap(),
-        );
+        if self.window.is_none() {
+            let window = Arc::new(
+                event_loop
+                    .create_window(Window::default_attributes())
+                    .unwrap(),
+            );
 
-        let renderer = B::new(window.clone());
+            let size = window.inner_size();
+            let renderer = B::new(window.clone(), size.width, size.height);
 
-        self.window = Some(window);
-        self.renderer = Some(renderer);
+            self.window = Some(window);
+            self.renderer = Some(renderer.unwrap());
+        }
     }
 
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {
